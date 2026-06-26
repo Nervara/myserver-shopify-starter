@@ -1,0 +1,35 @@
+// Postgres-backed session storage for the Shopify app.
+//
+// The official Shopify Remix template ships SQLite — fine for `shopify app dev`,
+// but a file-on-disk session store is the wrong default for a deployed app:
+// it doesn't survive a container redeploy and can't be shared across replicas.
+// myserver gives you a one-click Postgres database, so we point at it via
+// DATABASE_URL and store sessions there instead.
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Required by @shopify/shopify-app-session-storage-prisma.
+// Field shape is dictated by that adapter — do not rename columns.
+model Session {
+  id            String    @id
+  shop          String
+  state         String
+  isOnline      Boolean   @default(false)
+  scope         String?
+  expires       DateTime?
+  accessToken   String
+  userId        BigInt?
+  firstName     String?
+  lastName      String?
+  email         String?
+  accountOwner  Boolean   @default(false)
+  locale        String?
+  collaborator  Boolean?  @default(false)
+  emailVerified Boolean?  @default(false)
+}

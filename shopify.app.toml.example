@@ -1,0 +1,30 @@
+# Copy to shopify.app.toml and fill in your values, OR let the Shopify CLI
+# generate it with `shopify app config link`. This file is used by the Shopify
+# CLI (`shopify app dev` / `shopify app deploy`) — it is NOT read at runtime.
+# Runtime config comes from environment variables (see .env.example).
+
+client_id = "your-client-id"
+name = "My Shopify App"
+application_url = "https://your-app-url"
+embedded = true
+
+[access_scopes]
+# Keep in sync with the SCOPES env var.
+scopes = "write_products"
+
+[auth]
+redirect_urls = [
+  "https://your-app-url/auth/callback",
+  "https://your-app-url/auth/shopify/callback",
+  "https://your-app-url/api/auth/callback"
+]
+
+[webhooks]
+api_version = "2024-10"
+
+  [[webhooks.subscriptions]]
+  topics = ["app/uninstalled"]
+  uri = "/webhooks/app/uninstalled"
+
+[build]
+include_config_on_deploy = true
